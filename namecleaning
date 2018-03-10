@@ -1,0 +1,78 @@
+#splitting name in 1 column in the form "A.S.Prathap" into firstname and lastname columns
+count=0
+df=pd.read_csv('sample.csv',sep=',')    #You can replace read_csv() by read_excel()
+ld=df['Name']
+df['FirstName']=df['Name']
+df['LastName']=''
+for i in ld:
+    if str(i).find('.')!=-1:
+        temp=str(i).rfind('.')
+        print(i[:temp],'|',i[temp+1:],count)
+        df['LastName'][count]=i[:temp]
+        df['FirstName'][count]=i[temp+1:]
+    count+=1
+df.to_csv('newfile.csv',sep=',',encoding='utf-8',index=False)
+
+
+
+#splitting name in 1 column in the form "Prathap.A.S" into firstname and lastname columns
+count=0
+df=pd.read_csv('sample.csv',sep=',')    #You can replace read_csv() by read_excel()
+ld=df['Name']
+df['FirstName']=df['Name']
+df['LastName']=''
+for i in ld:
+    if str(i).find('.')!=-1:
+        temp=str(i).find('.')
+        print(i[:temp],'|',i[temp+1:],count)
+        df['FirstName'][count]=i[:temp]
+        df['LastName'][count]=i[temp+1:]
+    count+=1
+df.to_csv('newfile.csv',sep=',',encoding='utf-8',index=False)
+
+
+
+#splitting name in column 'FirstName' in form "V M Kumaran" or "VM Kumaran" into FirstName and lastname;If no initial leave as it is
+df=pd.read_csv('sample.csv',sep=',')  
+ld=df['FirstName']
+for i in ld:
+    j=str(i)
+    if j.find(' ')<3:
+        temp=j.find(' ')
+        while j.find(' ',temp+1,temp+4)!=-1:
+            temp=j.find(' ',temp+1,temp+4)
+        if str(df['LastName'][count])!=str('nan'):
+            sss=df['LastName'][count]+j[:temp]
+        else:
+            sss=j[:temp]
+        print(sss,' | ',j[temp+1:],count)
+        df['LastName'][count]=sss
+        df['FirstName'][count]=j[temp+1:]
+    count+=1
+df.to_csv('newfile.csv',sep=',',encoding='utf-8',index=False)
+
+
+
+#splitting of fullname in 1 column in the form "Maran V J" or "Mohan SV" into firstname and lastname columns
+import pandas as pd
+sf=pd.read_csv('sample.csv',sep=',')
+print(sf.shape[0])
+ld=sf['FirstName']
+count=0
+for i in ld:
+    j=str(i).strip()
+    if j.rfind(' ')!=-1:
+        temp=j.rfind(' ')
+        #print(j[:temp],'|',j[temp+1:],count)
+        if len(j)-j.rfind(' ')<=3:
+            temp=j.rfind(' ')
+            if j.find(' ',temp-3,temp)==-1:
+                if str(sf['LastName'][count])!=str('nan'):
+                    sss=sf['LastName'][count]+'.'+j[temp+1:]
+                else:
+                    sss=j[temp+1:]
+                print(j[:temp],'|',sss,count)
+        sf['FirstName'][count]=j[:temp]
+        sf['LastName'][count]=sss
+    count+=1
+sf.to_csv('newfile.csv',sep=',',encoding='utf-8',index=False)
